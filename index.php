@@ -8,11 +8,13 @@
 </head>
 <body>
     <?php
+
+    // echo "Hii!";
     // phpinfo();
     ?>
     <div class="container my-5">
-        <h2>To Do List</h2>
-        <a class="btn btn-primary" href="/addtask.php" role="button">Add Task</a>
+        <h2>To-Do List</h2>
+        <a class="btn btn-primary" href="/addTask.php" role="button">Add Task</a>
         <br>
         <table class="table">
             <thead>
@@ -26,22 +28,20 @@
             </thead>
             <tbody>
                 <?php
-                $servername = "localhost";
-                $username = "root";
-                $password = "";
-                $db_name = "todolist";
-                $conn = new mysqli($servername, $username, $password, $db_name);
+                
+                // database connection
+                include 'dbconn.php';
 
-                if($conn->connect_error){
-                    die("Connection failed: " . $conn->connect_error);
-                }
-
+                // print_r($conn);
+                
                 $sql = "SELECT * FROM tasks";
                 $result = $conn->query($sql);
 
+                // checks if the query execution is successful
                 if(!$result){
                     die("Invalid query: " . $conn->error);
                 }
+                print_r($result);
 
                 while($row = $result->fetch_assoc()){
                     echo "
