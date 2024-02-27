@@ -1,10 +1,6 @@
 <?php
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$db_name = "todolist";
-$conn = new mysqli($servername, $username, $password, $db_name);
+include 'dbconn.php';
 
 $id = "";
 $title = "";
@@ -30,11 +26,11 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
     }
 
     $title = $row['title'];
-    $description - $row['description'];
+    $description = $row['description'];
     $completed = $row['completed'];
-} else {
+    } else {
     $id = $_POST["id"];
-    $title - $_POST["title"];
+    $title = $_POST["title"];
     $description = $_POST["description"];
     $completed = $_POST["completed"];
     
@@ -73,7 +69,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 </head>
 <body>
     <div class="container my-5">
-        <h2>Add Task</h2>
+        <h2>Edit Task</h2>
 
         <?php
         if(!empty($error_msg)){
@@ -85,7 +81,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
             ";
         }
         ?>
-        <form action="POST">
+        <form method="POST">
             <input type="hidden" name="id" value="<?php echo $id; ?>">
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Title</label>
@@ -102,7 +98,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">completed</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="completed" value="<?php echo $completed; ?>">
+                    <input type="text" class="form-control" name="completed" placeholder="Yes/No" value="<?php echo $completed; ?>">
                 </div>
             </div>
             <div class="row mb-3">
