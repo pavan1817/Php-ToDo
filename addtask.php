@@ -1,10 +1,6 @@
 <?php
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$db_name = "todolist";
-$conn = new mysqli($servername, $username, $password, $db_name);
+include 'dbconn.php';
 
 $title = "";
 $description = "";
@@ -25,7 +21,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         }
 
         // add new tasks to the database
-        $sql = "INSERT INTO tasks(title, description, completed) VALUES('$title','$description','completed')";
+        $sql = "INSERT INTO tasks(title, description, completed) VALUES('$title','$description','$completed')";
         $result = $conn->query($sql);
 
         if(!$result){
@@ -39,7 +35,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         $success_msg = "tasks added successfully";
 
-        // it redirects the user to the index file
+        // it re-directs the user to the index file
         header("location: /index.php");
         exit;
 
@@ -71,7 +67,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             ";
         }
         ?>
-        <form action="POST">
+        <form method="POST">
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Title</label>
                 <div class="col-sm-6">
@@ -87,7 +83,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">completed</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="completed" value="<?php echo $completed; ?>">
+                    <input type="text" class="form-control" name="completed" placeholder="Yes/No" value="<?php echo $completed; ?>">
                 </div>
             </div>
 
