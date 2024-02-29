@@ -4,7 +4,7 @@ include 'dbconn.php';
 
 $title = "";
 $description = "";
-$completed = "";
+// $completed = "";
 
 $error_msg = "";
 $success_msg = "";
@@ -12,7 +12,7 @@ $success_msg = "";
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $title = $_POST["title"];
     $description = $_POST["description"];
-    $completed = $_POST["completed"];
+    // $completed = $_POST["completed"];
 
     do {
         if(empty($title) || empty($description)){
@@ -21,26 +21,27 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         }
 
         // add new tasks to the database
-        $sql = "INSERT INTO tasks(title, description, completed) VALUES('$title','$description','$completed')";
+        $sql = "INSERT INTO tasks(title, description) VALUES('$title','$description')";
         $result = $conn->query($sql);
 
         if(!$result){
             $error_msg = "Invalid query: " . $conn->error;
             break;
-        }
-
+        } else {
         $title = "";
         $description = "";
-        $completed = "";
+        // $completed = "";
 
         $success_msg = "tasks added successfully";
 
         // it re-directs the user to the index file
         header("location: /index.php");
         exit;
+        }
 
     } while (false);
 }
+    
 
 ?>
 
@@ -58,7 +59,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         <h2>Add Task</h2>
 
         <?php
-        if(!empty($error_msg)){
+        if(!empty($error_msg)){  // If the error_msg is not empty it executes echo
             echo "
             <div class='alert alert-warning alert-dismissible fade show' role='alert'>
                 <strong>$error_msg</strong>
@@ -77,13 +78,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Description</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="description" value="<?php echo $description; ?>">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label">completed</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="completed" placeholder="Yes/No" value="<?php echo $completed; ?>">
+                    <textarea name="description" cols="30" rows="5" class="form-control" value="<?php echo $description; ?>"></textarea>
                 </div>
             </div>
 
@@ -102,13 +97,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             }
             ?>
 
-
             <div class="row mb-3">
                 <div class="offset-sm-3 col-sm-3 d-grid">
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
                 <div class="col-sm-3 d-grid">
-                    <a class="btn btn-outline primary" href="/index.php" role="button">Cancel</a>
+                    <a class="btn btn-outline-secondary" href="/index.php" role="button">Cancel</a>
                 </div>
             </div>
         </form>
