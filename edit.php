@@ -5,7 +5,7 @@ include 'dbconn.php';
 $id = "";
 $title = "";
 $description = "";
-$completed = "";
+// $completed = "";
 
 $error_msg = "";
 $success_msg = "";
@@ -27,12 +27,12 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 
     $title = $row['title'];
     $description = $row['description'];
-    $completed = $row['completed'];
+    // $completed = $row['completed'];
     } else {
     $id = $_POST["id"];
     $title = $_POST["title"];
     $description = $_POST["description"];
-    $completed = $_POST["completed"];
+    // $completed = $_POST["completed"];
     
     do {
         if(empty($title) || empty($description)){
@@ -40,7 +40,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
             break;
         }
 
-        $sql = "UPDATE tasks SET title='$title', description='$description', completed='$completed' WHERE id=$id";
+        $sql = "UPDATE tasks SET title='$title', description='$description' WHERE id=$id";
         $result = $conn->query($sql);
 
         if(!$result){
@@ -92,21 +92,16 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Description</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="description" value="<?php echo $description; ?>">
+                    <textarea name="description" cols="30" rows="5" class="form-control"><?php echo $description; ?></textarea>
                 </div>
             </div>
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label">completed</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="completed" placeholder="Yes/No" value="<?php echo $completed; ?>">
-                </div>
-            </div>
+            
             <div class="row mb-3">
                 <div class="offset-sm-3 col-sm-3 d-grid">
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
                 <div class="col-sm-3 d-grid">
-                    <a class="btn btn-outline primary" href="/index.php" role="button">Cancel</a>
+                    <a class="btn btn-outline-secondary" href="/index.php" role="button">Cancel</a>
                 </div>
             </div>
         </form>
