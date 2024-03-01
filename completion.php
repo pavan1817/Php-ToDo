@@ -1,5 +1,5 @@
 <?php
-// database connection
+
 include 'dbconn.php';
 
 // Get task ID and new completion status
