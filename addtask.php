@@ -4,44 +4,44 @@ include 'dbconn.php';
 
 $title = "";
 $description = "";
-// $completed = "";
 
 $error_msg = "";
-$success_msg = "";
 
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
-    $title = $_POST["title"];
-    $description = $_POST["description"];
-    // $completed = $_POST["completed"];
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $title = trim($_POST["title"]); // Trim title
+    $description = trim($_POST["description"]); // Trim description
 
-    do {
-        if(empty($title) || empty($description)){
-            $error_msg = "some fields are empty";
-            break;
-        }
+    $error_msg = "";
 
-        // add new tasks to the database
-        $sql = "INSERT INTO tasks(title, description) VALUES('$title','$description')";
+    // Validate title
+    if (empty($title)) {
+        $error_msg .= "Title cannot be empty. ";
+    }
+
+    // Validate description
+    if (empty($description)) {
+        $error_msg .= "Description cannot be empty. ";
+    }
+
+    // Check if there are any validation errors
+    if (empty($error_msg)) {
+        // If no validation errors, proceed to insert into the database
+        $sql = "INSERT INTO tasks(title, description) VALUES('$title', '$description')";
         $result = $conn->query($sql);
 
-        if(!$result){
-            $error_msg = "Invalid query: " . $conn->error;
-            break;
+        if ($result) {
+            // If insertion or query is successful, redirect to the index page
+            header("location: /index.php");
+            exit;
         } else {
-        $title = "";
-        $description = "";
-        // $completed = "";
-
-        $success_msg = "tasks added successfully";
-
-        // it re-directs the user to the index file
-        header("location: /index.php");
-        exit;
+            // If insertion fails, set error message
+            $error_msg = "Error in inserting task: " . $conn->error;
         }
-
-    } while (false);
+    }
 }
-    
+
+// $sql = "SELECT * FROM tasks ORDER BY updated_at DESC";
+// $result = $conn->query($sql); 
 
 ?>
 
@@ -81,21 +81,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <textarea name="description" cols="30" rows="5" class="form-control" value="<?php echo $description; ?>"></textarea>
                 </div>
             </div>
-
-            <?php
-            if(!empty($success_msg)){
-                echo "
-                <div class='row mb-3'>
-                    <div class='offset-sm-3 col-sm-6'>
-                        <div class='alert alert-success alert-dismissible fade show' role='alert'>
-                            <strong>$success_msg</strong>
-                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                        </div>
-                    </div>
-                </div> 
-                ";
-            }
-            ?>
 
             <div class="row mb-3">
                 <div class="offset-sm-3 col-sm-3 d-grid">
