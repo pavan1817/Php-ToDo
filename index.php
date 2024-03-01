@@ -10,34 +10,35 @@
 </head>
 <body>
     <?php
-
     // echo "Hii!";
     // phpinfo();
     ?>
     <div class="container my-5">
         <h2>To-Do List</h2>
-        <a class="btn btn-primary" href="/addTask.php" role="button"><i class="bi bi-plus-lg"></i> Add Task</a>
+        <a class="btn btn-primary" href="/addTask.php" role="button" style="margin-bottom: 10px;"><i class="bi bi-plus-lg"></i> Add Task</a>
         <br>
-        <table class="table">
+        <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>S.No</th>
                     <th>Title</th>
                     <th>Description</th>
                     <th>Status</th>
                     <th>Action</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                
                 // database connection
                 include 'dbconn.php';
-
-                // print_r($conn);
                 
-                $sql = "SELECT * FROM tasks";
+                $sql = "SELECT * FROM tasks WHERE deleted = FALSE ORDER BY updated_at DESC";
                 $result = $conn->query($sql);
+
+                // initializing the s.no. to 0
+                $serial_no = 0;
 
                 // checks if the query execution is successful
                 if(!$result){
@@ -48,16 +49,19 @@
                 while($row = $result->fetch_assoc()){
 
                     // button text based on the completion status
+                    // default $row['status'] will be 0 -> NULL
                     $completedButtonText = $row['status'] ? 'Completed' : 'Mark as Completed';
                     // action based on the completion status
                     $completedButtonAction = $row['status'] ? 'btn-secondary' : 'btn-success';
-                    // Determine the link for toggling completion
+                    // link for toggling completion
                     $toggleCompletionLink = $row['status'] ? "/completion.php?id=$row[id]&status=0" : "/completion.php?id=$row[id]&status=1";
 
-                    
+                    // incrementing the s.no.
+                    $serial_no++;
+
                     echo "
                     <tr>
-                    <td>$row[id]</td>
+                    <td>$serial_no</td>
                     <td>$row[title]</td>
                     <td>$row[description]</td>
                     <td>
@@ -67,6 +71,8 @@
                         <a href='/edit.php?id=$row[id]'><i class='bi bi-pencil-square' style='color: #3545dc; margin-right: 15px;'></i></a>
                         <a href='/delete.php?id=$row[id]'><i class='bi bi-trash3-fill' style='color: #dc3545;'></i></a>
                     </td>
+                    <td>$row[created_at]</td>
+                    <td>$row[updated_at]</td>
                 </tr>
                     ";
                 }
