@@ -5,13 +5,11 @@ include 'dbconn.php';
 $id = "";
 $title = "";
 $description = "";
-// $completed = "";
 
 $error_msg = "";
-$success_msg = "";
 
-if($_SERVER['REQUEST_METHOD'] == 'GET'){
-    if(!isset($_GET['id'])){
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if (!isset($_GET['id'])) {
         header("location: /index.php");
         exit;
     }
@@ -20,41 +18,52 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
     $result = $conn->query($sql);
     $row = $result->fetch_assoc();
 
-    if(!$row){
+    if (!$row) {
         header("location: /index.php");
         exit;
     }
 
-    $title = $row['title'];
+    $title = $row['title'];         // access the associative array - values
     $description = $row['description'];
-    // $completed = $row['completed'];
-    } else {
-    $id = $_POST["id"];
-    $title = $_POST["title"];
-    $description = $_POST["description"];
-    // $completed = $_POST["completed"];
-    
-    do {
-        if(empty($title) || empty($description)){
-            $error_msg = "some fields are empty";
-            break;
+} elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Check if ID is set in POST request, if set, it's an edit operation
+    if (isset($_POST['id'])) {
+        $id = $_POST["id"];
+        $title = $_POST["title"];
+        $description = $_POST["description"];
+
+        $error_msg = "";
+
+        // Validate title
+        if (empty($title)) {
+            $error_msg .= "Title cannot be empty. ";
         }
 
-        $sql = "UPDATE tasks SET title='$title', description='$description' WHERE id=$id";
-        $result = $conn->query($sql);
-
-        if(!$result){
-            $error_msg = "Invalid query: " . $conn->error;
-            break;
+        // Validate description
+        if (empty($description)) {
+            $error_msg .= "Description cannot be empty. ";
         }
 
-        $success_msg = "task updated successfully";
+        // Check if there are any validation errors
+        if (empty($error_msg)) {
+            // If no validation errors, proceed to update the task in the database
+            $sql = "UPDATE tasks SET title='$title', description='$description' WHERE id=$id";
+            $result = $conn->query($sql);
 
-        header("location: /index.php");
-        exit;
-
-    } while (false);
+            if ($result) {
+                // If update is successful, redirects to the index page
+                header("location: /index.php");
+                exit;
+            } else {
+                // If update fails, set error message
+                $error_msg = "Error in updating task: " . $conn->error;
+            }}
+        } 
 }
+
+// $sql = "SELECT * FROM tasks ORDER BY updated_at DESC";
+// $result = $conn->query($sql);
+
 ?>
 
 
